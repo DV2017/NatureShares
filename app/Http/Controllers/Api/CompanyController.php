@@ -21,7 +21,7 @@ class CompanyController extends Controller
 
   public function projects(Company $company)
   {
-    return response()->json($company->projects);
+    return new CompanyResponse($company->projects);
   }
 
   /**
