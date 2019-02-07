@@ -20,7 +20,7 @@ Route::post('register', 'Auth\RegisterController@register');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
 
-// restricted access to signed in users only
+// 1st guard restricted access to signed in users only
 Route::group(['middleware' => 'auth:api'], function () {
 
   //show all companies and projects belonging to it
@@ -49,6 +49,10 @@ Route::group(['middleware' => 'auth:api'], function () {
   Route::post('projects/{project}/attachValue/{value}', 'Api\ProjectValueController@attach');
   Route::post('projects/{project}/detachValue/{value}', 'Api\ProjectValueController@detach');
 });
+
+//2nd guard : for company employees/project owners only
+Route::resource('companyTask', 'Api\CompanyTaskController')->middleware('auth:api');
+Route::resource('projectTask', 'Api\ProjectTaskController')->middleware('auth:api');
 
 
 
