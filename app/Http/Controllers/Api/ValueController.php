@@ -25,14 +25,13 @@ class ValueController extends Controller
    */
   public function attach(Value $value)
   {
-    $user = Auth::guard('api')->user();
+    $user = Auth::user();
     if ($user) {
       $value->users()->syncWithoutDetaching($user->id);
       return response()->json(['message' => 'Attached']);
     } else {
       return response()->json(['message' => 'User not found.']);
     }
-
   }
 
   /**
@@ -49,7 +48,7 @@ class ValueController extends Controller
   /**
    * Display all projects 'belongsToMany' values
    */
-  public function showProjects(Value $value)
+  public function projects(Value $value)
   {
     return new ValueResource($value->projects);
   }
@@ -59,7 +58,7 @@ class ValueController extends Controller
    */
   public function detach(Value $value)
   {
-    $user = Auth::guard('api')->user();
+    $user = Auth::user();
     if ($user) {
       $value->users()->detach($user->id);
       return response()->json(['message' => 'Detached']);

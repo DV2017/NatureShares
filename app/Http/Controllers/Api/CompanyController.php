@@ -6,6 +6,7 @@ use App\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
+use App\Http\Requests\CompanyStoreRequest;
 
 class CompanyController extends Controller
 {
@@ -19,9 +20,17 @@ class CompanyController extends Controller
     return new CompanyResource(Company::all());
   }
 
-  public function projects(Company $company)
+  /**
+   * Store a newly created resource in storage.
+   * AUTH GUARD : for 'hosts' only
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(CompanyStoreRequest $request, Company $company)
   {
-    return new CompanyResponse($company->projects);
+    $validated = $request->validated();
+    $company->create($request->all());
+    return response()->json(['message' => 'Company details stored.']);
   }
 
   /**
@@ -35,4 +44,37 @@ class CompanyController extends Controller
     return new CompanyResource($company);
   }
 
+  /**
+   * Update the specified resource in storage.
+   * AUTH GUARD : for 'hosts' only
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function update(CompanyStoreRequest $request, Company $company)
+  {
+    $validated = $request->validated();
+    $company->update(request()->all());
+    return response()->json(['message' => 'Company details updated.']);
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   * AUTH GUARD : for 'hosts' only
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy(Company $company)
+  {
+    $company->delete();
+    return response()->json(['message' => 'Deleted']);
+  }
+
+  /**
+   * show projects scoped to the company
+   */
+  public function projects(Company $company)
+  {
+    return new CompanyResource($company->projects);
+  }
 }
